@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Check, Eye, Plus } from "lucide-react";
 import { markWatched, removeMovie, setStatus, type WatchedReview } from "@/app/actions/library";
+import { useLibraryItem } from "@/components/LibraryItem";
 import { WatchedDialog } from "@/components/WatchedDialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ export function StatusButtons({ tmdbId, title, status, review, signedIn, compact
   const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogError, setDialogError] = useState<string | null>(null);
+  const libraryItem = useLibraryItem();
 
   if (!signedIn) {
     return (
@@ -39,11 +41,19 @@ export function StatusButtons({ tmdbId, title, status, review, signedIn, compact
     const previous = optimistic;
     setOptimistic(next);
     setError(null);
+    // In a Watched/Watchlist list, drop the card right away rather than after the
+    // server round trip; it reappears (with the error) if the action fails.
+    const leavesList = libraryItem !== null && next !== libraryItem.listStatus;
+    if (leavesList) libraryItem.setHidden(true);
     startTransition(async () => {
-      const result = next ? await setStatus(tmdbId, next) : await removeMovie(tmdbId);
+      const result = await (next ? setStatus(tmdbId, next) : removeMovie(tmdbId)).catch(() => ({
+        ok: false as const,
+        error: "Couldn't reach the server. Please try again.",
+      }));
       if (!result.ok) {
         setOptimistic(previous);
         setError(result.error);
+        if (leavesList) libraryItem.setHidden(false);
       }
     });
   }

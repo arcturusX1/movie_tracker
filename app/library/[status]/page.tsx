@@ -6,6 +6,7 @@ import { Film } from "lucide-react";
 import { getLibrary, getLibraryGenreIds, type MovieStatus } from "@/lib/library";
 import { parseLibraryQuery } from "@/lib/movie-utils";
 import { getGenres } from "@/lib/tmdb";
+import { LibraryItem } from "@/components/LibraryItem";
 import { MovieCard, MovieGrid } from "@/components/MovieCard";
 import { RatingInput } from "@/components/RatingInput";
 import { SortControls } from "@/components/SortControls";
@@ -101,30 +102,31 @@ async function LibraryList({ params, searchParams }: PageProps<"/library/[status
       ) : (
         <MovieGrid>
           {items.map((item) => (
-            <MovieCard
-              key={item.id}
-              tmdbId={item.tmdb_id!}
-              title={item.title ?? "Untitled"}
-              year={item.year}
-              posterPath={item.poster_path}
-              subtitle={query.sort === "genre" ? item.primary_genre : item.director}
-            >
-              {status === "watched" ? (
-                <RatingInput tmdbId={item.tmdb_id!} rating={item.rating} size="sm" />
-              ) : null}
-              <StatusButtons
+            <LibraryItem key={item.id} listStatus={status}>
+              <MovieCard
                 tmdbId={item.tmdb_id!}
                 title={item.title ?? "Untitled"}
-                status={status}
-                review={{
-                  rating: item.rating,
-                  note: item.note ?? "",
-                  visibility: item.note_visibility ?? "private",
-                }}
-                signedIn
-                compact
-              />
-            </MovieCard>
+                year={item.year}
+                posterPath={item.poster_path}
+                subtitle={query.sort === "genre" ? item.primary_genre : item.director}
+              >
+                {status === "watched" ? (
+                  <RatingInput tmdbId={item.tmdb_id!} rating={item.rating} size="sm" />
+                ) : null}
+                <StatusButtons
+                  tmdbId={item.tmdb_id!}
+                  title={item.title ?? "Untitled"}
+                  status={status}
+                  review={{
+                    rating: item.rating,
+                    note: item.note ?? "",
+                    visibility: item.note_visibility ?? "private",
+                  }}
+                  signedIn
+                  compact
+                />
+              </MovieCard>
+            </LibraryItem>
           ))}
         </MovieGrid>
       )}
