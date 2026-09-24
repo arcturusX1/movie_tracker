@@ -1,4 +1,4 @@
-# Reel Log
+# SilverScreen
 
 A personal movie tracker. Search any film, keep a **watchlist**, log what you've **watched** with a half-star rating and a short review, and share reviews publicly on each movie's page — alongside **Rotten Tomatoes**, **Metacritic**, IMDb and TMDB scores.
 
@@ -8,7 +8,8 @@ A personal movie tracker. Search any film, keep a **watchlist**, log what you've
 - **Search** the full TMDB catalogue and add movies to *Watched* or *Watchlist*
 - **Mark as watched** opens a dialog for a rating (½–5 stars) and an optional review, private or public; cancelling leaves the movie where it was
 - **Library** with Watched / Watchlist tabs, sortable by date added, year, director, genre, rating or title, and filterable by genre
-- **Movie pages** with poster, synopsis, director, cast, trailer, genres, critic scores, public Reel Log reviews and TMDB user reviews
+- **Recommendations** below the watchlist: suggestions based on your favourite genres and directors, with watched movies counting more than watchlist ones and higher ratings counting more. Each card says why it was suggested.
+- **Movie pages** with poster, synopsis, director, cast, trailer, genres, critic scores, public SilverScreen reviews and TMDB user reviews
 - Light and dark themes that follow the OS setting
 
 ## Tech stack
@@ -110,6 +111,8 @@ components/
   StatusButtons.tsx   Watched / Watchlist toggles
 lib/
   tmdb.ts, omdb.ts    External APIs, cached with 'use cache'
+  recommend.ts        Pure taste-profile and scoring logic (unit-tested)
+  recommendations.ts  Builds suggestions from the user's library and TMDB
   library.ts          Per-user queries (data access layer)
   auth.ts             Current-user helpers
   supabase/server.ts  Supabase clients (user-scoped and admin)
@@ -120,7 +123,7 @@ supabase/migrations/  Schema, `library` view and RLS policies
 ## Data model and security
 
 - **`profiles`**: one per user, created by a trigger on sign-up.
-- **`movies`, `genres`, `movie_genres`**: a shared cache of TMDB data, denormalized for sorting. Anyone can read it; only the server (secret key) writes to it, using data fetched from TMDB rather than taken from the client.
+- **`movies`, `genres`, `movie_genres`**: a shared cache of TMDB data, denormalized for sorting (including `director_ids`, the directors' TMDB person ids used for recommendations). Anyone can read it; only the server (secret key) writes to it, using data fetched from TMDB rather than taken from the client.
 - **`user_movies`**: a user's library entry: status (`watched` / `watchlist`), rating, review and its visibility.
 - **`library`** view: entries joined with movie data (`security_invoker`, so RLS still applies).
 

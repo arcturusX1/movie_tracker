@@ -17,7 +17,7 @@ export default function LoginPage({ searchParams }: PageProps<"/login">) {
     <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-16">
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Sign in to Reel Log</CardTitle>
+          <CardTitle className="text-xl">Sign in to SilverScreen</CardTitle>
           <CardDescription>
             Track what you&apos;ve watched, build a watchlist, and share reviews.
           </CardDescription>

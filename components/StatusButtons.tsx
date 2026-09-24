@@ -68,10 +68,15 @@ export function StatusButtons({ tmdbId, title, status, review, signedIn, compact
   function confirmWatched(value: WatchedReview | null) {
     setDialogError(null);
     startTransition(async () => {
-      const result = await markWatched(tmdbId, value);
+      const result = await markWatched(tmdbId, value).catch(() => ({
+        ok: false as const,
+        error: "Couldn't reach the server. Please try again.",
+      }));
       if (result.ok) {
         setOptimistic("watched");
         setDialogOpen(false);
+        // Hidden only after saving: hiding earlier would discard the review if it failed.
+        if (libraryItem && libraryItem.listStatus !== "watched") libraryItem.setHidden(true);
       } else {
         setDialogError(result.error);
       }
@@ -106,7 +111,7 @@ export function StatusButtons({ tmdbId, title, status, review, signedIn, compact
           Watchlist
         </Button>
       </div>
-      {error ? <p className="text-xs text-destructive">{error}</p> : null}
+      {error ? <p className="text-xs text-destructive-text">{error}</p> : null}
       <WatchedDialog
         open={dialogOpen}
         title={title}

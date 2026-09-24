@@ -5,49 +5,64 @@
 /* Dark mode follows the OS setting (no theme toggle), so `dark:` is a media query. */
 @custom-variant dark (@media (prefers-color-scheme: dark));
 
-/* shadcn tokens on a stone base, with the app's amber brand as `primary`. */
+/*
+ * SilverScreen palette. Every token comes from these five colors (plus white/black
+ * only to lighten or darken them); #660033 is reserved for errors and failures.
+ */
 :root {
+  --palette-periwinkle: #ccccff;
+  --palette-lavender: #a3a3cc;
+  --palette-slate: #5c5c99;
+  --palette-indigo: #292966;
+  --palette-error: #660033;
+
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.147 0.004 49.25);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.147 0.004 49.25);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.147 0.004 49.25);
-  --primary: oklch(0.666 0.179 58.318);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.97 0.001 106.424);
-  --secondary-foreground: oklch(0.216 0.006 56.043);
-  --muted: oklch(0.97 0.001 106.424);
-  --muted-foreground: oklch(0.553 0.013 58.071);
-  --accent: oklch(0.97 0.001 106.424);
-  --accent-foreground: oklch(0.216 0.006 56.043);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.923 0.003 48.717);
-  --input: oklch(0.923 0.003 48.717);
-  --ring: oklch(0.666 0.179 58.318);
+  --background: color-mix(in oklab, var(--palette-periwinkle) 30%, white);
+  --foreground: var(--palette-indigo);
+  --card: color-mix(in oklab, var(--palette-periwinkle) 10%, white);
+  --card-foreground: var(--palette-indigo);
+  --popover: color-mix(in oklab, var(--palette-periwinkle) 10%, white);
+  --popover-foreground: var(--palette-indigo);
+  --primary: var(--palette-indigo);
+  --primary-foreground: var(--palette-periwinkle);
+  --secondary: var(--palette-periwinkle);
+  --secondary-foreground: var(--palette-indigo);
+  --muted: color-mix(in oklab, var(--palette-periwinkle) 55%, white);
+  --muted-foreground: var(--palette-slate);
+  --accent: var(--palette-periwinkle);
+  --accent-foreground: var(--palette-indigo);
+  --destructive: var(--palette-error);
+  --destructive-foreground: color-mix(in oklab, var(--palette-error) 8%, white);
+  /* Inline error text; the error color itself reads well on light backgrounds. */
+  --destructive-text: var(--palette-error);
+  --border: color-mix(in oklab, var(--palette-lavender) 65%, white);
+  --input: var(--palette-lavender);
+  --ring: var(--palette-slate);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: oklch(0.147 0.004 49.25);
-    --foreground: oklch(0.985 0.001 106.423);
-    --card: oklch(0.216 0.006 56.043);
-    --card-foreground: oklch(0.985 0.001 106.423);
-    --popover: oklch(0.216 0.006 56.043);
-    --popover-foreground: oklch(0.985 0.001 106.423);
-    --primary: oklch(0.769 0.188 70.08);
-    --primary-foreground: oklch(0.216 0.006 56.043);
-    --secondary: oklch(0.268 0.007 34.298);
-    --secondary-foreground: oklch(0.985 0.001 106.423);
-    --muted: oklch(0.268 0.007 34.298);
-    --muted-foreground: oklch(0.709 0.01 56.259);
-    --accent: oklch(0.268 0.007 34.298);
-    --accent-foreground: oklch(0.985 0.001 106.423);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.769 0.188 70.08);
+    --background: var(--palette-indigo);
+    --foreground: var(--palette-periwinkle);
+    --card: color-mix(in oklab, var(--palette-indigo) 75%, var(--palette-slate));
+    --card-foreground: var(--palette-periwinkle);
+    --popover: color-mix(in oklab, var(--palette-indigo) 75%, var(--palette-slate));
+    --popover-foreground: var(--palette-periwinkle);
+    --primary: var(--palette-periwinkle);
+    --primary-foreground: var(--palette-indigo);
+    --secondary: color-mix(in oklab, var(--palette-indigo) 50%, var(--palette-slate));
+    --secondary-foreground: var(--palette-periwinkle);
+    --muted: color-mix(in oklab, var(--palette-indigo) 60%, var(--palette-slate));
+    --muted-foreground: var(--palette-lavender);
+    --accent: color-mix(in oklab, var(--palette-indigo) 50%, var(--palette-slate));
+    --accent-foreground: var(--palette-periwinkle);
+    --destructive: var(--palette-error);
+    --destructive-foreground: color-mix(in oklab, var(--palette-error) 8%, white);
+    /* #660033 is unreadable as text on indigo, so inline errors use a light tint of it. */
+    --destructive-text: color-mix(in oklab, var(--palette-error) 35%, white);
+    --border: color-mix(in oklab, var(--palette-slate) 55%, var(--palette-indigo));
+    --input: var(--palette-slate);
+    --ring: var(--palette-lavender);
   }
 }
 
@@ -70,6 +85,8 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-text: var(--destructive-text);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);

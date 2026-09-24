@@ -14,7 +14,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
         <Link href="/" className="flex shrink-0 items-center gap-2 text-lg font-semibold tracking-tight">
           <Clapperboard className="size-5 text-primary" aria-hidden />
-          <span className="hidden sm:inline">Reel Log</span>
+          <span className="hidden sm:inline">SilverScreen</span>
         </Link>
         <div className="min-w-0 flex-1">
           <Suspense>

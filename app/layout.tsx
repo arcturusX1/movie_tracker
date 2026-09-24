@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Reel Log", template: "%s · Reel Log" },
+  title: { default: "SilverScreen", template: "%s · SilverScreen" },
   description: "Track movies you've watched, keep a watchlist, rate and review.",
   // The app ships its own dark theme; stop Dark Reader from rewriting styles,
   // which also causes hydration mismatches.

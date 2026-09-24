@@ -9,6 +9,7 @@ import { getGenres } from "@/lib/tmdb";
 import { LibraryItem } from "@/components/LibraryItem";
 import { MovieCard, MovieGrid } from "@/components/MovieCard";
 import { RatingInput } from "@/components/RatingInput";
+import { Recommendations, RecommendationsSkeleton } from "@/components/Recommendations";
 import { SortControls } from "@/components/SortControls";
 import { StatusButtons } from "@/components/StatusButtons";
 import { buttonVariants } from "@/components/ui/button";
@@ -38,6 +39,9 @@ export default function LibraryPage({ params, searchParams }: PageProps<"/librar
       <Suspense fallback={<LibrarySkeleton />}>
         <LibraryList params={params} searchParams={searchParams} />
       </Suspense>
+      <Suspense>
+        <WatchlistRecommendations params={params} />
+      </Suspense>
     </div>
   );
 }
@@ -46,6 +50,16 @@ async function resolveStatus(params: PageProps<"/library/[status]">["params"]) {
   const { status } = await params;
   if (status !== "watched" && status !== "watchlist") notFound();
   return status;
+}
+
+/** Suggestions stream in below the watchlist without holding up the list itself. */
+async function WatchlistRecommendations({ params }: Pick<PageProps<"/library/[status]">, "params">) {
+  if ((await resolveStatus(params)) !== "watchlist") return null;
+  return (
+    <Suspense fallback={<RecommendationsSkeleton />}>
+      <Recommendations />
+    </Suspense>
+  );
 }
 
 async function LibraryTabs({ params }: Pick<PageProps<"/library/[status]">, "params">) {

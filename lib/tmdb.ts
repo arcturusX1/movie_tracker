@@ -10,6 +10,9 @@ export type TmdbMovieSummary = {
   poster_path: string | null;
   overview: string;
   vote_average: number;
+  vote_count: number;
+  /** Present on list endpoints (search, discover, credits); detail responses use `genres`. */
+  genre_ids?: number[];
 };
 
 export type TmdbGenre = { id: number; name: string };
@@ -91,6 +94,30 @@ export async function getTrending() {
     cacheLife("minutes");
     return [];
   }
+}
+
+/** Movies in any of the given genres (OR): the best rated, or the most popular right now. */
+export async function discoverByGenres(genreIds: number[], sort: "rated" | "popular") {
+  "use cache";
+  cacheLife("days");
+  if (genreIds.length === 0) return [];
+  const data = await tmdb<Paged<TmdbMovieSummary>>("/discover/movie", {
+    with_genres: genreIds.join("|"),
+    sort_by: sort === "rated" ? "vote_average.desc" : "popularity.desc",
+    "vote_count.gte": sort === "rated" ? "1000" : "200",
+    include_adult: "false",
+  });
+  return data?.results ?? [];
+}
+
+/** Films the person directed. */
+export async function getDirectedMovies(personId: number) {
+  "use cache";
+  cacheLife("days");
+  const data = await tmdb<{ crew: (TmdbMovieSummary & { job: string })[] }>(
+    `/person/${personId}/movie_credits`,
+  );
+  return (data?.crew ?? []).filter((c) => c.job === "Director");
 }
 
 export async function getGenres() {

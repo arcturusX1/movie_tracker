@@ -19,6 +19,11 @@ export function findDirector(crew: { job: string; name: string }[] | undefined) 
   return directors.length ? directors.join(", ") : null;
 }
 
+/** TMDB person ids of the director(s), for looking up their other films. */
+export function findDirectorIds(crew: { job: string; id: number }[] | undefined) {
+  return [...new Set((crew ?? []).filter((c) => c.job === "Director").map((c) => c.id))];
+}
+
 export type Scores = {
   rottenTomatoes: string | null;
   metacritic: string | null;

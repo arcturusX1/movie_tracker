@@ -259,7 +259,7 @@ async function CommunityReviews({ tmdbId }: { tmdbId: number }) {
   const reviews = await getPublicReviews(tmdbId);
   return (
     <section className="space-y-3">
-      <h2 className="text-lg font-semibold">Reel Log reviews</h2>
+      <h2 className="text-lg font-semibold">SilverScreen reviews</h2>
       {reviews.length === 0 ? (
         <p className="text-sm text-muted-foreground">No public reviews yet. Be the first!</p>
       ) : (

@@ -18,7 +18,7 @@ type Props = {
 export function NoteEditor({ tmdbId, note, visibility }: Props) {
   const [text, setText] = useState(note ?? "");
   const [isPublic, setIsPublic] = useState(visibility === "public");
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<{ message: string; failed: boolean } | null>(null);
   const [pending, startTransition] = useTransition();
   const dirty = text !== (note ?? "") || isPublic !== (visibility === "public");
 
@@ -29,7 +29,7 @@ export function NoteEditor({ tmdbId, note, visibility }: Props) {
         note: text,
         visibility: isPublic ? "public" : "private",
       });
-      setStatus(result.ok ? "Saved" : result.error);
+      setStatus(result.ok ? { message: "Saved", failed: false } : { message: result.error, failed: true });
     });
   }
 
@@ -71,7 +71,11 @@ export function NoteEditor({ tmdbId, note, visibility }: Props) {
           {pending ? "Saving…" : "Save"}
         </Button>
       </div>
-      {status ? <p className="text-xs text-muted-foreground">{status}</p> : null}
+      {status ? (
+        <p className={status.failed ? "text-xs text-destructive-text" : "text-xs text-muted-foreground"}>
+          {status.message}
+        </p>
+      ) : null}
     </form>
   );
 }

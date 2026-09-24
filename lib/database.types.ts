@@ -44,6 +44,7 @@ export type Database = {
           overview: string | null;
           runtime: number | null;
           director: string | null;
+          director_ids: number[];
           updated_at: string;
         };
         Insert: {
@@ -56,6 +57,7 @@ export type Database = {
           overview?: string | null;
           runtime?: number | null;
           director?: string | null;
+          director_ids?: number[];
           updated_at?: string;
         };
         Update: {
@@ -68,6 +70,7 @@ export type Database = {
           overview?: string | null;
           runtime?: number | null;
           director?: string | null;
+          director_ids?: number[];
           updated_at?: string;
         };
         Relationships: [];

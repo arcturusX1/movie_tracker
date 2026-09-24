@@ -5,7 +5,7 @@ import { unstable_rethrow } from "next/navigation";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import type { TablesInsert, TablesUpdate } from "@/lib/database.types";
-import { findDirector, yearOf } from "@/lib/movie-utils";
+import { findDirector, findDirectorIds, yearOf } from "@/lib/movie-utils";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { getMovie } from "@/lib/tmdb";
 
@@ -54,6 +54,7 @@ async function cacheMovie(tmdbId: number) {
     overview: movie.overview,
     runtime: movie.runtime,
     director: findDirector(movie.credits.crew),
+    director_ids: findDirectorIds(movie.credits.crew),
     updated_at: new Date().toISOString(),
   });
   if (movieError) throw movieError;
